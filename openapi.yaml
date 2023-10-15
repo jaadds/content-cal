@@ -1,0 +1,169 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/contents/{id}:
+    get:
+      tags:
+      - content-controller
+      operationId: getContentById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Content'
+    put:
+      tags:
+      - content-controller
+      operationId: updateContent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Content'
+        required: true
+      responses:
+        "204":
+          description: No Content
+    delete:
+      tags:
+      - content-controller
+      operationId: deleteContent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: No Content
+  /api/contents:
+    get:
+      tags:
+      - content-controller
+      operationId: getAll
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+    post:
+      tags:
+      - content-controller
+      operationId: createContent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Content'
+        required: true
+      responses:
+        "201":
+          description: Created
+  /api/contents/filterByStatus/{status}:
+    get:
+      tags:
+      - content-controller
+      operationId: filterByStatus
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - IDEA
+          - IN_PROGRESS
+          - COMPLETED
+          - PUBLISHED
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+  /api/contents/filter/{keyword}:
+    get:
+      tags:
+      - content-controller
+      operationId: filterByTitle
+      parameters:
+      - name: keyword
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+components:
+  schemas:
+    Content:
+      required:
+      - title
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        desc:
+          type: string
+        status:
+          type: string
+          enum:
+          - IDEA
+          - IN_PROGRESS
+          - COMPLETED
+          - PUBLISHED
+        url:
+          type: string
+        contentType:
+          type: string
+          enum:
+          - ARTICLE
+          - VIDEO
+          - CONFERENCE_TALK
+          - COURSE
+        createdTime:
+          type: string
+          format: date-time
+        updatedTime:
+          type: string
+          format: date-time
